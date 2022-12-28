@@ -1,6 +1,7 @@
 {
   "expo": {
     "name": "PaisaGenie",
+    "scheme": "paisagenie", 
     "slug": "PaisaGenie",
     "version": "1.0.0",
     "orientation": "portrait",
