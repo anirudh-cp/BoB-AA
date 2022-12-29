@@ -1,6 +1,8 @@
 # Project Specific Files:
 
 .expo
+src/API/SampleData
+
 
 # ---------------------------------------------------------
 

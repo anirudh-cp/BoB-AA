@@ -1,7 +1,8 @@
 import { useState } from "react";
 
-import API from "./../API/Consent"
+import API from "../API/TempConsent"
 import useIdentStore from "../storages/IdentStore";
+import useDataStore from "../storages/DataStore";
 
 import * as Linking from 'expo-linking';
 
@@ -15,6 +16,7 @@ export default function useConsent() {
 
     const apiObject = new API();
     const { setTrackingID, setReferenceID, trackingID, referenceID } = useIdentStore();
+    const { setData } = useDataStore();
 
 
     function makeID(length) {
@@ -32,18 +34,18 @@ export default function useConsent() {
 
         loading, authStatus,
 
-        async getConsent(phone) {
+        async getConsent(phone, FIType) {
             setLoading(true);
             //console.log(API_KEY)
-            const response = await apiObject.getConsent(API_KEY, phone, "ONETIME", makeID(16), Linking.createURL());
+            const response = await apiObject.getConsent(API_KEY, phone, FIType, makeID(16), makeID(16));
             setLoading(false);
 
             if (response['code'] === 200) {
                 setAuthStatus(true);
                 setReferenceID(response.data.referenceId);
                 setTrackingID(response.data.trackingId);
+                setData(response.data.data)
             }
-
             return response
         },
     }
