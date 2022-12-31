@@ -35,7 +35,8 @@ export default function useConsent() {
         async getConsent(phone) {
             setLoading(true);
             //console.log(API_KEY)
-            const response = await apiObject.getConsent(API_KEY, phone, "ONETIME", makeID(16), Linking.createURL());
+            const response = await apiObject.getConsent("915d5866ebcdf53684fd37128a", 
+            phone, "ONETIME", makeID(16), 'https://express-server.loca.lt');
             setLoading(false);
 
             if (response['code'] === 200) {

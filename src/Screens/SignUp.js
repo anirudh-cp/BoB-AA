@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View, TextInput, Button, Linking } from "react-native";
 
-import useConsent from "../utils/TempConsent";
+import useConsent from "../utils/Consent";
 import * as WebBrowser from 'expo-web-browser';
 
 import { Dropdown, MultiSelect } from 'react-native-element-dropdown';
@@ -32,14 +32,20 @@ export default function SignUp({ navigation }) {
 
   const { getConsent } = useConsent();
 
-  const handleLogin = async (phone, FIType) => {
+  const handleLogin = async (phone) => {
     console.log("Get consent for user phone number " + phone);
-    const response = await getConsent(phone, FIType);
-    // console.log(JSON.stringify(response));
+    const response = await getConsent(phone);
 
-    console.log('Data Retrived! To access any data which has been retrived: \n import useDataStore from "../storages/DataStore;\n const { data } = useDataStore();\n\n Then use the variable for access to it.')
-
-    navigation.navigate('Home')
+    if (response["code"] === 200) {
+      console.log("Consent retrival success!");
+      // Linking.openURL(response.data.redirectionUrl).catch(err => console.error("Couldn't load page", err));
+      WebBrowser.openBrowserAsync(response.data.redirectionUrl)
+      navigation.push('Home');
+    }
+    else {
+      console.error("Consent retrival failure! " + response.code);
+      console.error(JSON.stringify(response.data));
+    }
   }
 
   return (
@@ -94,7 +100,7 @@ export default function SignUp({ navigation }) {
       />
 
       <Button title="Submit" onPress={() => {
-        handleLogin(valuePhone, valueFI);
+        handleLogin(valuePhone);
       }} />
 
     </View>
