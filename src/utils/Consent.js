@@ -2,8 +2,7 @@ import { useState } from "react";
 
 import API from "./../API/Consent"
 import useIdentStore from "../storages/IdentStore";
-
-import * as Linking from 'expo-linking';
+import useDataStore from "../storages/DataStore";
 
 import {API_KEY} from '@env'
 
@@ -12,9 +11,12 @@ export default function useConsent() {
 
     const [loading, setLoading] = useState(false);
     const [authStatus, setAuthStatus] = useState(false);
+    const [dataStatus, setDataStatus] = useState(false);
+    const [responseStatus, setResponseStatus] = useState(false);
 
     const apiObject = new API();
-    const { setTrackingID, setReferenceID, trackingID, referenceID } = useIdentStore();
+    const { setTrackingID, setReferenceID, trackingID, referenceID, setPhone } = useIdentStore();
+    const { setData } = useDataStore();
 
 
     function makeID(length) {
@@ -30,7 +32,7 @@ export default function useConsent() {
 
     return {
 
-        loading, authStatus,
+        loading, authStatus, dataStatus, responseStatus, 
 
         async getConsent(phone) {
             setLoading(true);
@@ -43,8 +45,34 @@ export default function useConsent() {
                 setAuthStatus(true);
                 setReferenceID(response.data.referenceId);
                 setTrackingID(response.data.trackingId);
+                setPhone(phone);
             }
 
+            return response
+        },
+
+        async getData() {
+            setLoading(true);
+            //console.log(API_KEY)
+            let response = await apiObject.getAnalytics("915d5866ebcdf53684fd37128a", 
+            trackingID, referenceID);
+            
+            if (response['code'] === 200) {
+                setData(response['data']);
+                setResponseStatus(true);
+            }
+            // else{
+            //     response = await apiObject.getDataFetch("915d5866ebcdf53684fd37128a", 
+            //     trackingID, referenceID);
+
+            //     if (response['code'] === 200) {
+            //         setData(response['data']);
+            //         setResponseStatus(true);
+            //     }
+            // }
+            setLoading(false);
+            setDataStatus(true);
+            setResponseStatus(false);
             return response
         },
     }

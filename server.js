@@ -3,7 +3,7 @@ const app     = express()
 
 app.get('*', (req, res) => {
   // REDIRECT goes here
-  res.redirect('exp://192.168.0.100:19000')
+  res.redirect('exp://192.168.0.100:19000?hello=world')
 })
 
 app.set('port', (process.env.PORT || 3000))
