@@ -23,18 +23,18 @@ const Loading = ({ navigation }) => {
 
     }, [])
 
-    // useEffect(() => {
-    //     if (dataStatus === true && responseStatus === false) {
-    //         setTimeout(() => {
-    //             navigation.navigate("Auth", {});
-    //         }, 3000);
-    //     }
-    //     else if (dataStatus === true && responseStatus === true) {
-    //         setTimeout(() => {
-    //             navigation.navigate("StackTabs", {});
-    //         }, 3000);
-    //     }
-    // }, [dataStatus, responseStatus])
+    useEffect(() => {
+        if (dataStatus === true && responseStatus === false) {
+            setTimeout(() => {
+                navigation.navigate("Auth", {});
+            }, 4000);
+        }
+        else if (dataStatus === true && responseStatus === true) {
+            setTimeout(() => {
+                navigation.navigate("MyGenie", {});
+            }, 4000);
+        }
+    }, [dataStatus, responseStatus])
 
 
     return (
@@ -67,7 +67,6 @@ const Loading = ({ navigation }) => {
                 speed={1}
             >
                 <Text>Fetching Data from Server...</Text>
-                <Text> Data keys: {Object.keys(data)} </Text>
             </AnimatedLoader>
 
 

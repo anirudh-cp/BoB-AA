@@ -15,6 +15,8 @@ import Navigator from "./src/Screens/Navigator";
 import Info from "./src/Screens/Info";
 import Test from "./src/Screens/Test";
 import Loading from "./src/Screens/Loading";
+import Profile from "./src/Screens/Profile";
+import GenieGrants from "./src/Screens/GenieGrants";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -82,6 +84,31 @@ export default function App() {
             </View>
           )
         }} />
+
+        <Tab.Screen name="Profile" component={Profile} options={{
+          tabBarIcon: ({ focused }) => (
+            <View style={{ alignItems: 'center', justifyContent: 'center', bottom: 1, top: 1 }}>
+              <Ionicons name='person' size={20} style={{
+                color: focused ? '#8c52ff' : 'black',
+              }}
+              />
+              <Text style={{ color: focused ? '#8c52ff' : 'black', fontSize: 12 }}>Profile</Text>
+            </View>
+          )
+        }} />
+        <Tab.Screen name="GenieGrants" component={GenieGrants} options={{
+          tabBarIcon: ({ focused }) => (
+            <View style={{ alignItems: 'center', justifyContent: 'center', bottom: 1, top: 1 }}>
+              <Ionicons name='ribbon' size={20} style={{
+                color: focused ? '#8c52ff' : 'black',
+              }}
+              />
+              <Text style={{ color: focused ? '#8c52ff' : 'black', fontSize: 12 }}>Rewards</Text>
+            </View>
+          )
+        }} />
+
+
       </Tab.Navigator>
     )
   }

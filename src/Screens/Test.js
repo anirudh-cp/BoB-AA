@@ -12,6 +12,9 @@ import {
   Dimensions
 } from "react-native";
 
+import useDataStore from "../storages/DataStore";
+import useIdentStore from "../storages/IdentStore";
+
 const data = [
   { quarter: 1, earnings: 13000 },
   { quarter: 2, earnings: 16500 },
@@ -20,6 +23,10 @@ const data = [
 ];
 
 const Test = () => {
+
+  const {data}  = useDataStore();
+  const {trackingID, referenceID}= useIdentStore();
+
   return (
     <SafeAreaView>
       <View
@@ -30,11 +37,7 @@ const Test = () => {
             alignItems: "center",
           }}
         >
-        <View style={[styles.card, styles.shadowProp, styles.elevation]}>
-          <VictoryChart width={300} height={300} theme={VictoryTheme.material}>
-              <VictoryBar data={data} x="quarter" y="earnings" />
-            </VictoryChart>
-        </View>
+
       </View>
     </SafeAreaView>
   );

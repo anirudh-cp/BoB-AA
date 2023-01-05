@@ -56,23 +56,26 @@ export default function useConsent() {
             //console.log(API_KEY)
             let response = await apiObject.getAnalytics("915d5866ebcdf53684fd37128a", 
             trackingID, referenceID);
-            
+            console.log(response['code'] + ' for analytics endpoint')
             if (response['code'] === 200) {
                 setData(response['data']);
                 setResponseStatus(true);
             }
-            // else{
-            //     response = await apiObject.getDataFetch("915d5866ebcdf53684fd37128a", 
-            //     trackingID, referenceID);
+            else{
+                response = await apiObject.getDataFetch("915d5866ebcdf53684fd37128a", 
+                trackingID, referenceID);
 
-            //     if (response['code'] === 200) {
-            //         setData(response['data']);
-            //         setResponseStatus(true);
-            //     }
-            // }
+                if (response['code'] === 200) {
+                    setData(response['data']);
+                    setResponseStatus(true);
+                }
+                else{
+                    setResponseStatus(false);
+                }
+
+            }
             setLoading(false);
             setDataStatus(true);
-            setResponseStatus(false);
             return response
         },
     }
