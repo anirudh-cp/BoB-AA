@@ -74,7 +74,7 @@ def invest(phone):
     
     if request.method == 'POST':
         total = float(request.form["total"])
-        risk = float(request.form["risk"])
+        risk = request.form["risk"]
         costofliving = float(request.form["costofliving"])
         nod = float(request.form["nod"])
         #UPDATE CALCULATION
