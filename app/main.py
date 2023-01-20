@@ -73,10 +73,10 @@ def loan(phone):
 def invest(phone):
     
     if request.method == 'POST':
-        total = request.form["total"]
-        risk = request.form["risk"]
-        costofliving = request.form["costofliving"]
-        nod = request.form["nod"]
+        total = float(request.form["total"])
+        risk = float(request.form["risk"])
+        costofliving = float(request.form["costofliving"])
+        nod = float(request.form["nod"])
         #UPDATE CALCULATION
         cost = nod*12000 + 20000
         x = 1.25*costofliving
@@ -168,11 +168,11 @@ def invest(phone):
 def moratorium(phone):
     
     if request.method == 'POST':
-        principal = request.form["principal"]
-        interest = request.form["interest"]
-        duration = request.form["duration"]
-        tenure = request.form["tenure"]
-        emi = request.form["emi"]
+        principal = float(request.form["principal"])
+        interest = float(request.form["interest"])
+        duration = float(request.form["duration"])
+        tenure = float(request.form["tenure"])
+        emi = float(request.form["emi"])
         n = tenure*12
         r = interest/1200
         balance =  (principal * ((1+r)**n)) - (emi/r (((1+r)**n)-1))
@@ -193,9 +193,9 @@ def moratorium(phone):
 def emi(phone):
     
     if request.method == 'POST':
-        principal = request.form["principal"]
-        interest = request.form["interest"]
-        tenure = request.form["tenure"]
+        principal = float(request.form["principal"])
+        interest = float(request.form["interest"])
+        tenure = float(request.form["tenure"])
         p = principal
         r = interest/1200
         n = tenure*12
