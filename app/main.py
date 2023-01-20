@@ -12,18 +12,28 @@ app = Flask(__name__)
 # Debt - emi, moratorium ; Invest - high, medium, low ; Loan - common ; Insurance - common
 
 #insurance
-# vehicle - idv, year ; health - age, premium ; travel - duration, national/intl ; life - duration, premimum
+# vehicle - idv, year ; health - age, premium ; travel - duration, premium ; life - duration, premimum
 @app.route("/insurance/<phone>", methods = ['POST', 'GET', 'DELETE'])
 def insurance(phone):
     
     if request.method == 'POST':
         type = request.form["type"]
-        val1 = request.form["val1"]
-        val2 = request.form["val2"]
+        val1 = request.form["val1"]# Vehicle - idv , Health - Age , Travel - Duration , Life - Duration
+        val2 = request.form["val2"]# Vehicle - years , Health - premium , Travel - premium , Life - premium
         #UPDATE CALCULATION
-        premium = val1 * val2
-        tenure = request.form["tenure"]
-        db.insurance.insert_one({"phone": phone, "type" : type, "premium" : premium, "tenure" : tenure})
+        if(type == "Vehicle"):
+            premium = val1 * 0.02
+            coverage = val1 * 0.2
+        if(type == "Health"):
+            premium = val2 + 0.02*val2
+            coverage = premium*10.345
+        if(type == "Travel"):
+            premium = val2 - 0.032*val2
+            coverage = premium*val1*1.212
+        if(type == "Life"):
+            premium = val2 - 0.12*val2
+            coverage = premium * val1 * 4.221
+        db.insurance.insert_one({"phone": phone, "type" : type, "premium" : premium, "coverage" : coverage})
         return make_response('', 200)
     elif request.method == 'GET':
         records = db['insurance'].find({"phone" : phone})
@@ -43,9 +53,9 @@ def loan(phone):
         amount = request.form["amount"]
         tenure = request.form["tenure"]
         #UPDATE CALCULATION
-        bob = {"amount" : amount, "interest" : interest, "tenure" : tenure, "condition" : conditino}
-        hdfc = {"amount" : amount, "interest" : interest, "tenure" : tenure, "condition" : conditino}
-        sbi = {"amount" : amount, "interest" : interest, "tenure" : tenure, "condition" : conditino}
+        bob = {"amount" : amount, "interest" : "7.8%", "tenure" : tenure, "condition" : "negotiable"}
+        hdfc = {"amount" : amount-0.2*amount, "interest" : "6.9%", "tenure" : tenure, "condition" : "negotiable"}
+        sbi = {"amount" : amount, "interest" : "6.9%", "tenure" : tenure, "condition" : "Non-negotiable"}
         db.loan.insert_one({"phone": phone, "type" : type, "bob" : bob, "hdfc" : hdfc, "sbi" : sbi})
         return make_response('', 200)
     elif request.method == 'GET':
@@ -63,15 +73,85 @@ def loan(phone):
 def invest(phone):
     
     if request.method == 'POST':
+        total = request.form["total"]
         risk = request.form["risk"]
-        cost = request.form["cost"]
+        costofliving = request.form["costofliving"]
         nod = request.form["nod"]
         #UPDATE CALCULATION
-        totalamt = cost
-        percinvest = cost
-        primary = {"name" : "recurring deposit", "value" : "75K", "perc" : "50%"}
-        secondary = {"name" : "term deposit", "value" : "60K", "perc" : "40%"}
-        tertiary = {"name" : "mutual funds", "value" : "15K", "perc" : "10%"}
+        cost = nod*12000 + 20000
+        x = 1.25*costofliving
+        val = t-1.5*x
+        if(cost > (t-x)):
+            message = "Decrease cost of living to " + str(val)
+        if(total<500000):
+            if(risk == "Low"):
+                p = 0.5*val
+                s = 0.4*val
+                t = 0.1*val
+                primary = {"name" : "Recurring Deposit", "value" : p, "perc" : "50%"}
+                secondary = {"name" : "National Pension Scheme", "value" : s, "perc" : "40%"}
+                tertiary = {"name" : "Term Deposit/Mutual Fund", "value" : t, "perc" : "10%"}
+            if(risk == "Medium"):
+                p = 0.3*val
+                s = 0.4*val
+                t = 0.3*val
+                primary = {"name" : "Recurring Deposit", "value" : p, "perc" : "30%"}
+                secondary = {"name" : "National Pension Scheme", "value" : s, "perc" : "40%"}
+                tertiary = {"name" : "Term Deposit/Mutual Fund", "value" : t, "perc" : "30%"}
+            if(risk == "High"):
+                p = 0.4*val
+                s = 0.2*val
+                t = 0.4*val
+                primary = {"name" : "National Pension Scheme", "value" : p, "perc" : "40%"}
+                secondary = {"name" : "Term Deposit/Mutual Fund", "value" : s, "perc" : "20%"}
+                tertiary = {"name" : "Equities", "value" : t, "perc" : "40%"}
+        #FOR INCOME BETWEEN 5L AND 10L
+        if(total>500000 and total<1000000):
+            if(risk == "Low"):
+                p = 0.5*val
+                s = 0.4*val
+                t = 0.1*val
+                primary = {"name" : "Recurring Deposit/NPS", "value" : p, "perc" : "50%"}
+                secondary = {"name" : "Term Deposit", "value" : s, "perc" : "40%"}
+                tertiary = {"name" : "Mutual Fund", "value" : t, "perc" : "10%"}
+            if(risk == "Medium"):
+                p = 0.3*val
+                s = 0.4*val
+                t = 0.3*val
+                primary = {"name" : "National Pension Scheme", "value" : p, "perc" : "30%"}
+                secondary = {"name" : "Term Deposit", "value" : s, "perc" : "40%"}
+                tertiary = {"name" : "Mutual Fund/Equities", "value" : t, "perc" : "30%"}
+            if(risk == "High"):
+                p = 0.4*val
+                s = 0.2*val
+                t = 0.4*val
+                primary = {"name" : "NPS/Term Deposit", "value" : p, "perc" : "40%"}
+                secondary = {"name" : "Mutual Fund", "value" : s, "perc" : "20%"}
+                tertiary = {"name" : "Equities", "value" : t, "perc" : "40%"}
+        #FOR INCOME BETWEEN GREATER THAN 10L
+        if(total>1000000):
+            if(risk == "Low"):
+                p = 0.5*val
+                s = 0.4*val
+                t = 0.1*val
+                primary = {"name" : "National Pension Scheme", "value" : p, "perc" : "50%"}
+                secondary = {"name" : "Term Deposit", "value" : s, "perc" : "40%"}
+                tertiary = {"name" : "Equities", "value" : t, "perc" : "10%"}
+            if(risk == "Medium"):
+                p = 0.3*val
+                s = 0.4*val
+                t = 0.3*val
+                primary = {"name" : "Recurring Deposit/NPS", "value" : p, "perc" : "30%"}
+                secondary = {"name" : "Mutual Fund", "value" : s, "perc" : "40%"}
+                tertiary = {"name" : "Equities", "value" : t, "perc" : "30%"}
+            if(risk == "High"):
+                p = 0.4*val
+                s = 0.2*val
+                t = 0.4*val
+                primary = {"name" : "Term Deposit/Mutual Fund", "value" : p, "perc" : "40%"}
+                secondary = {"name" : "Mutual Fund/Equities", "value" : s, "perc" : "20%"}
+                tertiary = {"name" : "Equities", "value" : t, "perc" : "40%"}                
+        percinvest = (val/total)*100
         db.invest.insert_one({"phone": phone, "risk" : risk, "total" : total, "percinvest" : percinvest, "primary" : primary, "secondary" : secondary, "tertiary" : tertiary})
         return make_response('', 200)
     elif request.method == 'GET':
@@ -91,7 +171,12 @@ def moratorium(phone):
         principal = request.form["principal"]
         interest = request.form["interest"]
         duration = request.form["duration"]
-        newEmi = principal * interest * duration #UPDATE CALCULATION
+        tenure = request.form["tenure"]
+        emi = request.form["emi"]
+        n = tenure*12
+        r = interest/1200
+        balance =  (principal * ((1+r)**n)) - (emi/r (((1+r)**n)-1))
+        newEmi = balance * ((1+r)**duration) - balance
         db.moratorium.insert_one({"phone": phone, "newEmi" : newEmi})
         return make_response('', 200)
     elif request.method == 'GET':
@@ -113,8 +198,8 @@ def emi(phone):
         tenure = request.form["tenure"]
         p = principal
         r = interest/1200
-        n = tenure
-        emi = (p*r*pow((1+r),n)) / (pow((1+r),n)-1)
+        n = tenure*12
+        emi = (p*r*((1+r)**n)) / (((1+r)**n)-1)
         db.emi.insert_one({"phone" : phone,"interest": interest, "tenure": tenure, "emi": emi})
         return make_response('', 200)
     elif request.method == 'GET':
