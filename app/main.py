@@ -18,8 +18,8 @@ def insurance(phone):
     
     if request.method == 'POST':
         type = request.form["type"]
-        val1 = request.form["val1"]# Vehicle - idv , Health - Age , Travel - Duration , Life - Duration
-        val2 = request.form["val2"]# Vehicle - years , Health - premium , Travel - premium , Life - premium
+        val1 = float(request.form["val1"]) # Vehicle - idv , Health - Age , Travel - Duration , Life - Duration
+        val2 = float(request.form["val2"]) # Vehicle - years , Health - premium , Travel - premium , Life - premium
         #UPDATE CALCULATION
         if(type == "Vehicle"):
             premium = val1 * 0.02
@@ -50,7 +50,7 @@ def loan(phone):
     
     if request.method == 'POST':
         type = request.form["type"]
-        amount = request.form["amount"]
+        amount = int(request.form["amount"])
         tenure = request.form["tenure"]
         #UPDATE CALCULATION
         bob = {"amount" : amount, "interest" : "7.8%", "tenure" : tenure, "condition" : "negotiable"}
