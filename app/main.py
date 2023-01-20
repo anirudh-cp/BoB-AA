@@ -80,6 +80,7 @@ def invest(phone):
         #UPDATE CALCULATION
         cost = nod*12000 + 20000
         x = 1.25*costofliving
+        t = total
         val = t-1.5*x
         if(cost > (t-x)):
             message = "Decrease cost of living to " + str(val)
