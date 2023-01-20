@@ -42,7 +42,7 @@ def insurance(phone):
         else:
             return make_response({'Data not found'}, 404)
     elif request.method == 'DELETE':
-        records = db['insurance'].delete({'phone': phone})
+        records = db['insurance'].delete_many({'phone': phone})
 
 #loan
 @app.route("/loan/<phone>", methods = ['POST', 'GET', 'DELETE'])
@@ -65,7 +65,7 @@ def loan(phone):
         else:
             return make_response({'Data not found'}, 404)
     elif request.method == 'DELETE':
-        records = db['loan'].delete({'phone': phone})
+        records = db['loan'].delete_many({'phone': phone})
 
 
 #invest page
@@ -161,7 +161,7 @@ def invest(phone):
         else:
             return make_response({'Data not found'}, 404)
     elif request.method == 'DELETE':
-        records = db['invest'].delete({'phone': phone})
+        records = db['invest'].delete_many({'phone': phone})
 
 #Debt page, moratorium tab
 @app.route("/moratorium/<phone>", methods = ['POST', 'GET', 'DELETE'])
@@ -186,7 +186,7 @@ def moratorium(phone):
         else:
             return make_response({'Data not found'}, 404)
     elif request.method == 'DELETE':
-        records = db['moratorium'].delete({'phone': phone})
+        records = db['moratorium'].delete_many({'phone': phone})
 
 #Debt page, emi tab
 @app.route("/emi/<phone>", methods = ['POST', 'GET', 'DELETE'])
@@ -200,6 +200,7 @@ def emi(phone):
         r = interest/1200
         n = tenure*12
         emi = (p*r*((1+r)**n)) / (((1+r)**n)-1)
+        db['emi'].delete_one({'phone': phone})
         db.emi.insert_one({"phone" : phone,"interest": interest, "tenure": tenure, "emi": emi})
         return make_response('', 200)
     elif request.method == 'GET':
@@ -209,7 +210,7 @@ def emi(phone):
         else:
             return make_response({'Data not found'}, 404)
     elif request.method == 'DELETE':
-        records = db['emi'].delete({'phone': phone})
+        records = db['emi'].delete_many({'phone': phone})
 
 # Home page, goals tab 
 @app.route("/info/<phone>", methods = ['POST', 'GET', 'DELETE'])
@@ -229,7 +230,7 @@ def info(phone):
         else:
             return make_response({'Data not found'}, 404)
     elif request.method == 'DELETE':
-        records = db['info'].delete({'phone': phone})
+        records = db['info'].delete_many({'phone': phone})
 
 
 @app.route("/redirect", methods = ['POST'])
