@@ -219,7 +219,8 @@ def info(phone):
         action = request.form["action"]
         compare = request.form["compare"]
         value = request.form["value"]
-        db.info.insert_one({"phone" : phone, "action": action, "compare": compare, "value":value})
+        category = request.form['category']
+        db.info.insert_one({"phone" : phone, "action": action, "compare": compare, "value":value, 'category': category})
         return make_response('', 200)
     elif request.method == 'GET':
         records = db['info'].find({"phone" : phone})
