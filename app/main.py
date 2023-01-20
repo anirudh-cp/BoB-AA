@@ -82,6 +82,11 @@ def invest(phone):
         x = 1.25*costofliving
         t = total
         val = t-1.5*x
+        
+        message = ""
+        primary = None
+        secondary = None
+        tertiary = None
         if(cost > (t-x)):
             message = "Decrease cost of living to " + str(val)
         if(total<500000):
