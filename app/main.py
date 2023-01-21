@@ -33,6 +33,7 @@ def insurance(phone):
         if(type == "Life"):
             premium = val2 - 0.12*val2
             coverage = premium * val1 * 4.221
+        records = db['insurance'].delete_many({'phone': phone})
         db.insurance.insert_one({"phone": phone, "type" : type, "premium" : premium, "coverage" : coverage})
         return make_response('', 200)
     elif request.method == 'GET':
@@ -56,6 +57,7 @@ def loan(phone):
         bob = {"amount" : amount, "interest" : "7.8%", "tenure" : tenure, "condition" : "negotiable"}
         hdfc = {"amount" : amount-0.2*amount, "interest" : "6.9%", "tenure" : tenure, "condition" : "negotiable"}
         sbi = {"amount" : amount, "interest" : "6.9%", "tenure" : tenure, "condition" : "Non-negotiable"}
+        records = db['loan'].delete_many({'phone': phone})
         db.loan.insert_one({"phone": phone, "type" : type, "bob" : bob, "hdfc" : hdfc, "sbi" : sbi})
         return make_response('', 200)
     elif request.method == 'GET':
@@ -158,6 +160,7 @@ def invest(phone):
                 secondary = {"name" : "Mutual Fund/Equities", "value" : s, "perc" : "20%"}
                 tertiary = {"name" : "Equities", "value" : t, "perc" : "40%"}                
         percinvest = (val/total)*100
+        records = db['invest'].delete_many({'phone': phone})
         db.invest.insert_one({"phone": phone, "risk" : risk, "total" : total, "percinvest" : percinvest, "primary" : primary, "secondary" : secondary, "tertiary" : tertiary})
         return make_response('', 200)
     elif request.method == 'GET':
@@ -206,7 +209,7 @@ def emi(phone):
         r = interest/1200
         n = tenure*12
         emi = (p*r*((1+r)**n)) / (((1+r)**n)-1)
-        db['emi'].delete_one({'phone': phone})
+        records = db['emi'].delete_many({'phone': phone})
         db.emi.insert_one({"phone" : phone,"interest": interest, "tenure": tenure, "emi": emi})
         return make_response('', 200)
     elif request.method == 'GET':
